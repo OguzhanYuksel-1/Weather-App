@@ -1,0 +1,64 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:havvadurumuuuu/utils/location.dart';
+
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  State<LoadingScreen> createState() => _LoadingScrenState();
+}
+
+class _LoadingScrenState extends State<LoadingScreen> {
+  late locationHelper _locationData;
+  Future<void> getlocationData() async {
+    _locationData = locationHelper(latitude: null ?? 0.0, longitude: null ?? 0.0 );// buraya bak bi 
+    await _locationData.getCurrentLocation();
+
+    if (_locationData.latitude == null || _locationData.longitude == null) {
+      print("Konum Bilgileri Bulunamadı ,");
+    } else {
+      print("latitude : " + _locationData.latitude.toString());
+      print("longitude : " + _locationData.longitude.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getlocationData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.orange, Colors.blue]),
+        ),
+        child: Center(
+          child: SpinKitDancingSquare(
+            color: Colors.white,
+            size: 150.0,
+            duration: Duration(microseconds: 1200),
+          ),
+        ),
+      ),
+    );
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  super.debugFillProperties(properties);
+  properties.add(DiagnosticsProperty<locationHelper>('locationData', _locationData));
+}
+
+
+  //@override
+  //void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    //super.debugFillProperties(properties);
+    //properties.add(DiagnosticsProperty<locationHelper>('_locationData', _locationData));
+  }
+}

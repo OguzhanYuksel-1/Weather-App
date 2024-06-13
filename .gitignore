@@ -1,0 +1,40 @@
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter/
+.idea/
+
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Flutter.xcworkspace/
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/
+ios/Runner/Flutter.framework/
+ios/Runner/GeneratedPluginRegistrant.*
+
+# Android
+android/.gradle/
+android/.idea/
+android/.settings/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/local.properties
+android/app/build/
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db

@@ -1,0 +1,44 @@
+import 'package:location/location.dart';
+
+class locationHelper {
+  double latitude; // enlem
+  double longitude; // boylam
+  locationHelper({required this.latitude, required this.longitude});
+
+  Future<void> getCurrentLocation() async {
+    Location location = Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    // location için servis olup olmadıgına bakmak için
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+    // konum izin kontrolü
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    // izinler tamam ve servite ayaktaysa
+    _locationData = await location.getLocation();
+     latitude = _locationData.latitude ?? 0.0;
+     longitude = _locationData.longitude ?? 0.0;
+    //latitude = LocationData.latitude;
+    //longitude = LocationData.longitude;
+
+  }
+}
+
+//class locationHelper {
+//double latitude;// enlem
+//double longitude;// boylam
+//}

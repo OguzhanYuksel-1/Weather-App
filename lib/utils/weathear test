@@ -1,0 +1,76 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:havvadurumuuuu/utils/location.dart';
+import 'package:http/http.dart';
+
+const apiKey = "863919b0ae72ee9e3634f1fcf6158d6a";// apı keyı tanımladım sürekli yazmak zorunda kalmayalım
+
+class WeatherDisplayData {
+  final Icon weatherIcon;
+  final AssetImage weatherImage;
+
+  WeatherDisplayData({required this.weatherIcon, required this.weatherImage});
+}
+
+class WeatherData {
+  final LocationHelper _locationData;
+
+  WeatherData({required LocationHelper locationData})
+      : _locationData = locationData;
+
+  double? currentTemperature;
+  int? currentCondition;
+  String? city;
+
+  Future<void> getCurrentTemperature() async {
+    try {
+      Response response = await get(Uri.parse(
+          "https://api.openweathermap.org/data/2.5/weather?lat=${_locationData.latitude}&lon=${_locationData.longitude}&appid=${apiKey}&units=metric"));// apıden verileri almak için gerekli http satırı
+
+      if (response.statusCode == 200) {
+        String data = response.body;
+        var currentWeather = jsonDecode(data);
+
+        currentTemperature = currentWeather['main']['temp'].toDouble();// apiden sıcaklık almak için
+        currentCondition = currentWeather['weather'][0]['id'];// apiden güncel hava durumunu almak için 
+        city = currentWeather['name'];// apiden şehrin ismini almak için 
+      } else {
+        print("API'den değer gelmiyor");// hata verirse apiden deger gelmiyor diye mesaj döndürsün diye
+      }
+    } catch (e) {
+      print("Hata oluştu: $e");
+    }
+  }
+
+  WeatherDisplayData getWeatherDisplayData() {
+    if (currentCondition != null && currentCondition! < 600) {
+      return WeatherDisplayData(
+        weatherIcon: Icon(
+          FontAwesomeIcons.cloud,
+          size: 75.0,
+          color: Colors.white,
+        ),
+        weatherImage: AssetImage("assets/bulutlu.jpeg"),
+      );
+    } else {
+      DateTime now = DateTime.now();
+      if (now.hour >= 19) {
+        return WeatherDisplayData(
+          weatherIcon: Icon(
+            FontAwesomeIcons.moon,
+            size: 75.0,
+            color: Colors.white,
+          ),
+          weatherImage: AssetImage("assets/gece.jpeg"),
+        );
+      } else {
+        return WeatherDisplayData(
+          weatherIcon:
+              Icon(FontAwesomeIcons.sun, size: 75.0, color: Colors.white),
+          weatherImage: AssetImage("assets/gunesli.jpeg"),
+        );
+      }
+    }
+  }
+}
